@@ -156,7 +156,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Initialize DFlip
         const options = {
-            height: 800,
+            height: isMobile ? window.innerHeight : 800,
             duration: 800,
             backgroundColor: "transparent",
             hard: hardSetting,
@@ -170,6 +170,7 @@ document.addEventListener('DOMContentLoaded', () => {
             enablePan: true,
             zoomForce: isMobile ? 0.9 : 1,
             scrollWheel: !isMobile, // Prevent accidental zoom on mobile
+            controlsPosition: isMobile ? 'hide' : 'bottom',
         };
 
         // Create the flipbook using the Global DFLIP object

@@ -214,14 +214,49 @@ header {
 
 /* Hide DFlip controls and arrows on mobile for immersive touch reading */
 @media (max-width: 932px) {
-    .df-ui-controls {
+
+    /* Hide ALL DFlip UI elements */
+    .df-ui-controls,
+    .df-ui-wrapper,
+    .df-ui-btn,
+    .df-ui-prev,
+    .df-ui-next,
+    .df-ui-zoomin,
+    .df-ui-zoomout,
+    .df-ui-outline,
+    .df-ui-thumbnail,
+    .df-ui-more,
+    .df-ui-pageno,
+    .df-ui-alt,
+    .df-ui-page,
+    [class*="df-ui-"] {
         display: none !important;
+        visibility: hidden !important;
+        opacity: 0 !important;
+        pointer-events: none !important;
     }
 
-    .df-ui-prev,
-    .df-ui-next {
-        display: none !important;
+    /* Force book to fill full viewport */
+    .df-container {
+        width: 100vw !important;
+        height: 100vh !important;
+        padding: 0 !important;
+        margin: 0 !important;
     }
+
+    .df-3dcanvas,
+    .df-canvas,
+    .df-book-stage {
+        width: 100% !important;
+        height: 100% !important;
+    }
+}
+
+/* Also hide in fullscreen mode */
+:fullscreen [class*="df-ui-"],
+:-webkit-full-screen [class*="df-ui-"] {
+    display: none !important;
+    visibility: hidden !important;
 }
 
 /* Sound Toggle Animation */

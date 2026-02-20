@@ -171,6 +171,11 @@ document.addEventListener('DOMContentLoaded', () => {
             zoomForce: isMobile ? 0.9 : 1,
             scrollWheel: !isMobile, // Prevent accidental zoom on mobile
             controlsPosition: isMobile ? 'hide' : 'bottom',
+            paddingTop: 0,
+            paddingBottom: 0,
+            paddingLeft: 0,
+            paddingRight: 0,
+            forceFit: true
         };
 
         // Create the flipbook using the Global DFLIP object

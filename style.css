@@ -237,18 +237,18 @@ header {
     }
 
     /* Force book to fill full viewport */
-    .df-container {
+    .df-container,
+    .df-wrapper,
+    .df-book-stage,
+    .df-3dcanvas,
+    .df-canvas {
         width: 100vw !important;
         height: 100vh !important;
         padding: 0 !important;
         margin: 0 !important;
-    }
-
-    .df-3dcanvas,
-    .df-canvas,
-    .df-book-stage {
-        width: 100% !important;
-        height: 100% !important;
+        top: 0 !important;
+        left: 0 !important;
+        position: fixed !important;
     }
 }
 
@@ -581,39 +581,36 @@ header {
         font-size: 0.75rem;
     }
 
-    /* Full viewport book */
+    /* Full viewport book — zero all spacing */
+    html,
     body {
         overflow: hidden;
+        margin: 0 !important;
+        padding: 0 !important;
+        height: 100% !important;
     }
 
-    .container {
-        padding: 0;
-        margin: 0;
-        max-width: 100%;
-        min-height: 100vh;
-    }
-
+    main.container,
     #viewer-section {
         height: 100vh !important;
         width: 100vw !important;
-        margin: 0;
-        padding: 0;
+        margin: 0 !important;
+        padding: 0 !important;
+        min-height: 100vh !important;
+        display: block !important;
+        overflow: hidden !important;
     }
 
     #df_book_viewer {
         width: 100vw !important;
         height: 100vh !important;
+        margin: 0 !important;
+        padding: 0 !important;
     }
 
     /* Hide the desktop "Upload New PDF" button in landscape */
     #viewer-section>div:last-child {
         display: none !important;
-    }
-
-    /* Make DFlip controls not overlap FAB */
-    .df-ui-controls {
-        bottom: 8px !important;
-        right: 80px !important;
     }
 }
 

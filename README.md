@@ -2,8 +2,6 @@
 
 A high-end, eye-friendly, and fully interactive 3D PDF Flipbook application built with Vanilla JS, HTML5, and CSS3. Transform static PDFs into realistic digital books with smooth page-turning animations, premium glassmorphism UI, and dedicated mobile optimization.
 
-![Premium Design](icon.png)
-
 ## ✨ Features
 
 - **Realistic 3D Animation**: Smooth page curling, shadows, and physical-book physics using the DFlip library.
@@ -28,4 +26,5 @@ A high-end, eye-friendly, and fully interactive 3D PDF Flipbook application buil
 1. **[Visit the Live Site](https://joy-s-s.github.io/FlipBook/)**: Click here to open the app.
 2. **Choose Theme**: Use the Sun/Moon icon to pick your preferred aesthetic.
 3. **Upload**: Drag and drop any PDF file or use the "Choose PDF" button.
+
 4. **Interact**: Click and drag page corners (or swipe on mobile) to experience the 3D flip effect.

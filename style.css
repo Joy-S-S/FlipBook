@@ -196,7 +196,7 @@ header {
 
 #df_book_viewer {
     width: 100%;
-    height: 70vh;
+    height: 100%;
     touch-action: none !important;
 }
 
@@ -284,19 +284,106 @@ header {
         font-size: 1.2rem;
     }
 
-    /* Forces Landscape Rotation on Portrait Mobile */
-    @media (orientation: portrait) {
-
-        #df_book_viewer,
-        .df-container {
-            transform: rotate(90deg) !important;
-            width: 80vh !important;
-            height: 95vw !important;
-            margin: auto !important;
-        }
-    }
-
     .container {
         padding: 0 0.5rem;
+    }
+
+    /* Force the Entire Flipbook Container to be Horizontal */
+    #viewer-section {
+        height: calc(100vh - 45px);
+        /* Adjusted for header */
+        width: 100vw;
+        position: relative;
+        overflow: hidden;
+        background: var(--bg-base);
+    }
+
+    #df_book_viewer {
+        position: absolute !important;
+        top: 50% !important;
+        left: 50% !important;
+        width: calc(100vh - 45px) !important;
+        /* Matches exactly the height of viewer-section */
+        height: 100vw !important;
+        /* Visual height matches phone width */
+        transform: translate(-50%, -50%) rotate(90deg) !important;
+        transform-origin: center center !important;
+    }
+
+    /* Fix Internal UI (Buttons, Page Numbers) - Keep them upright relative to the phone */
+    .df-ui-btn,
+    .df-ui-wrapper .df-ui-page,
+    .df-ui-zoom-prev,
+    .df-ui-zoom-next {
+        transform: rotate(-90deg) !important;
+    }
+
+    /* The arrows natively sit at the left/right of the book.
+       We remove the upright correction so they rotate WITH the book. */
+    .df-ui-next,
+    .df-ui-prev {
+        transform: none !important;
+        margin: 10px !important;
+        /* Allow clicks to pass through the invisible container block so edge swiping works */
+        pointer-events: none !important;
+    }
+
+    .df-ui-next .df-ui-btn,
+    .df-ui-prev .df-ui-btn {
+        transform: none !important;
+        width: 44px !important;
+        height: 44px !important;
+        background: rgba(0, 0, 0, 0.4) !important;
+        border-radius: 50% !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        /* Re-enable clicks just for the actual circular button */
+        pointer-events: auto !important;
+    }
+
+    /* Fix "More" Menu popping out from the toolbar */
+    .df-ui-more .df-more-container {
+        /* Local "left" points towards the book (right on phone screen) */
+        left: 100% !important;
+        right: auto !important;
+        /* Local "bottom" points to the bottom of the button */
+        bottom: 0 !important;
+        background: var(--bg-surface) !important;
+        border-radius: 12px !important;
+        padding: 5px 0 !important;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5) !important;
+        min-width: 200px !important;
+    }
+
+    /* Fix buttons inside the More Menu so they aren't rotated again */
+    .df-more-container .df-ui-btn {
+        transform: none !important;
+        /* Cancel the -90deg rotation */
+        width: 100% !important;
+        height: 45px !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: flex-start !important;
+        padding: 0 15px !important;
+        margin: 0 !important;
+        border-radius: 0 !important;
+        background: transparent !important;
+        color: var(--text-main) !important;
+        text-decoration: none !important;
+    }
+
+    /* Ensure text is clearly visible next to the icons */
+    .df-more-container .df-ui-btn span {
+        display: inline-block !important;
+        margin-left: 15px !important;
+        font-family: inherit !important;
+        font-size: 14px !important;
+        white-space: nowrap !important;
+    }
+
+    #new-upload-mobile {
+        color: var(--primary-main);
+        border-color: var(--primary-main);
     }
 }

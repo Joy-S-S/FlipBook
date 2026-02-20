@@ -12,6 +12,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const uploadSection = document.getElementById('upload-section');
     const viewerSection = document.getElementById('viewer-section');
     const newUploadBtn = document.getElementById('new-upload');
+    const newUploadBtnMobile = document.getElementById('new-upload-mobile');
 
     // --- Theme Management ---
     const savedTheme = localStorage.getItem('theme') || 'dark';
@@ -99,6 +100,7 @@ document.addEventListener('DOMContentLoaded', () => {
         uploadSection.style.display = 'none';
         viewerSection.style.display = 'flex';
         soundToggle.style.display = 'flex';
+        if (newUploadBtnMobile) newUploadBtnMobile.style.display = 'flex';
 
         // Get hard setting from selector
         const hardSetting = effectSelector.value;
@@ -115,9 +117,13 @@ document.addEventListener('DOMContentLoaded', () => {
             autoEnableOutline: true,
             enableDownload: true,
             // Mobile & Touch Optimizations
-            enableControlTouch: true,  // Explicitly enables touch controls
-            enablePan: true,           // Allows smoother panning/dragging
-            zoomForce: 1,              // Smoother zoom interaction
+            enableControlTouch: true,
+            enablePan: true,
+            zoomForce: 1,
+            touchAction: "none",       // Forces browser to let DFlip handle touches
+            // Allow page turning with a generic swipe over the whole edge instead of just corner holding
+            enableSwipe: true,
+            swipeDistance: 30          // Minimum drag to trigger a page turn
         };
 
         // Create the flipbook using the Global DFLIP object
@@ -132,8 +138,54 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    // --- Touch & Pointer Interceptor for Rotated View ---
+    // Modern devices often use PointerEvents or MouseEvents instead of pure TouchEvents.
+    // We override coordinate logic on all of them so DFlip calculates the rotated corner grabs correctly.
+    (function fixCoordinates() {
+        function swapProperty(proto, propX, propY, useInnerWidth) {
+            if (!proto) return;
+            const origX = Object.getOwnPropertyDescriptor(proto, propX);
+            const origY = Object.getOwnPropertyDescriptor(proto, propY);
+
+            if (origX && origY) {
+                Object.defineProperty(proto, propX, {
+                    get: function () {
+                        if (window.innerWidth <= 768 && window.innerHeight > window.innerWidth) {
+                            return origY.get.call(this); // X becomes Y
+                        }
+                        return origX.get.call(this);
+                    }
+                });
+                Object.defineProperty(proto, propY, {
+                    get: function () {
+                        if (window.innerWidth <= 768 && window.innerHeight > window.innerWidth) {
+                            // Y becomes ScreenWidth - X (or just swapping)
+                            return useInnerWidth ? (window.innerWidth - origX.get.call(this)) : origX.get.call(this);
+                        }
+                        return origY.get.call(this);
+                    }
+                });
+            }
+        }
+
+        function applySwaps(proto) {
+            swapProperty(proto, 'clientX', 'clientY', true);
+            swapProperty(proto, 'pageX', 'pageY', true);
+            swapProperty(proto, 'screenX', 'screenY', true);
+            swapProperty(proto, 'x', 'y', true);
+        }
+
+        if (typeof Touch !== 'undefined') applySwaps(Touch.prototype);
+        if (typeof MouseEvent !== 'undefined') applySwaps(MouseEvent.prototype);
+        if (typeof PointerEvent !== 'undefined') applySwaps(PointerEvent.prototype);
+    })();
+
     // --- New Upload ---
-    newUploadBtn.addEventListener('click', () => {
-        location.reload(); // Simple way to reset everything
+    [newUploadBtn, newUploadBtnMobile].forEach(btn => {
+        if (btn) {
+            btn.addEventListener('click', () => {
+                location.reload();
+            });
+        }
     });
 });

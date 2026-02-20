@@ -28,6 +28,13 @@
     --shadow: 0 12px 40px rgba(0, 0, 0, 0.6);
 }
 
+/* Ensure DFlip background respects theme */
+[data-theme="dark"] .df-container,
+[data-theme="dark"] #df_book_viewer,
+[data-theme="dark"] .df-fullscreen-parent {
+    background-color: var(--bg-base) !important;
+}
+
 * {
     margin: 0;
     padding: 0;
@@ -62,7 +69,6 @@ body {
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    /* Vertically center children */
 }
 
 /* Header & Controls */
@@ -76,12 +82,10 @@ header {
     top: 0;
     z-index: 1001;
     height: 40px;
-    /* Ultra-compact height */
 }
 
 .logo {
     font-size: 1.1rem;
-    /* Smaller logo */
     font-weight: 800;
     color: var(--primary-main);
     letter-spacing: -0.5px;
@@ -99,9 +103,11 @@ header {
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.upload-zone:hover {
+.upload-zone:hover,
+.upload-zone.glass-active {
     background: rgba(27, 156, 133, 0.05);
     transform: translateY(-5px);
+    border-color: var(--accent);
 }
 
 .upload-zone i {
@@ -164,6 +170,7 @@ header {
     justify-content: center;
     cursor: pointer;
     transition: all 0.2s ease;
+    position: relative;
 }
 
 #theme-toggle:hover,
@@ -187,17 +194,43 @@ header {
     justify-content: center;
 }
 
-#viewer-wrapper {
-    width: 90vw;
-    height: 80vh;
-    display: none;
-    /* Shown after upload */
-}
-
 #df_book_viewer {
     width: 100%;
     height: 70vh;
-    /* Reduced height to ensure internal controls fit */
+    touch-action: none !important;
+}
+
+/* Hide internal DFlip sound button */
+.df-ui-sound {
+    display: none !important;
+}
+
+/* Sound Toggle Animation */
+#sound-toggle {
+    display: none;
+    /* Shown on upload */
+}
+
+#sound-toggle::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 1.5px;
+    background: #FF4B4B;
+    transform: translate(-50%, -50%) rotate(-45deg);
+    transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    pointer-events: none;
+    border-radius: 1px;
+}
+
+#sound-toggle.muted::after {
+    width: 20px;
+}
+
+#sound-toggle.muted svg {
+    opacity: 0.5;
 }
 
 /* Animations */
@@ -216,44 +249,54 @@ header {
 .animate-in {
     animation: fadeIn 0.8s ease forwards;
 }
-/* Hide internal DFlip sound button */
-.df-ui-sound {
-    display: none !important;
-}
-
-/* Sound Toggle Animation */
-#sound-toggle { position: relative; }
-#sound-toggle::after {
-    content: '';
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 0;
-    height: 1.5px;
-    background: #FF4B4B;
-    transform: translate(-50%, -50%) rotate(-45deg);
-    transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    pointer-events: none;
-    border-radius: 1px;
-}
-#sound-toggle.muted::after { width: 20px; }
-#sound-toggle.muted svg { opacity: 0.5; }
-
-
-#sound-toggle { display: none; }
-
-
-/* Mobile touch optimization */
-#df_book_viewer { touch-action: none !important; }
-
 
 /* Mobile Responsiveness */
 @media (max-width: 768px) {
-    header { padding: 0.2rem 1rem; }
-    .controls { gap: 0.5rem; }
-    .logo { font-size: 0.9rem; }
-    .glass-input { padding: 0.2rem 0.4rem; font-size: 0.75rem; }
-    .upload-zone { padding: 2rem 1rem; margin: 0 1rem; }
-    #df_book_viewer { height: 60vh; }
-    .container { padding: 0 0.5rem; }
+    header {
+        padding: 0.2rem 0.8rem;
+    }
+
+    .controls {
+        gap: 0.5rem;
+    }
+
+    .logo {
+        font-size: 0.85rem;
+    }
+
+    .glass-input {
+        padding: 0.2rem 0.4rem;
+        font-size: 0.75rem;
+    }
+
+    /* Adjusted Upload Zone for Mobile */
+    .upload-zone {
+        padding: 2rem 1rem;
+        max-width: 280px;
+        margin: 0 auto;
+    }
+
+    .upload-zone i {
+        font-size: 2.2rem;
+    }
+
+    .upload-zone h2 {
+        font-size: 1.2rem;
+    }
+
+    /* Forces Landscape Rotation on Portrait Mobile */
+    @media (orientation: portrait) {
+
+        #df_book_viewer,
+        .df-container {
+            transform: rotate(90deg) !important;
+            width: 80vh !important;
+            height: 95vw !important;
+            margin: auto !important;
+        }
+    }
+
+    .container {
+        padding: 0 0.5rem;
+    }
 }

@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FLIPBOOK | Premium 3D PDF Viewer</title>
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="icon.png">
+
+    <!-- Primary Meta Tags -->
+    <meta name="title" content="FLIPBOOK | Premium 3D PDF Viewer">
+    <meta name="description"
+        content="Transform your PDFs into interactive 3D flipbooks with smooth animations, eye-friendly dark mode, and a premium glassmorphism design.">
+    <meta name="keywords" content="PDF, Flipbook, 3D Book, PDF Viewer, Digital Magazine, Interactive PDF">
+    <meta name="author" content="Flipbook App">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="">
+    <meta property="og:title" content="FLIPBOOK | Premium 3D PDF Viewer">
+    <meta property="og:description"
+        content="Transform your PDFs into immersive 3D flipbooks. Experience a real book feel on any device.">
+    <meta property="og:image" content="icon.png">
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="">
+    <meta property="twitter:title" content="FLIPBOOK | Premium 3D PDF Viewer">
+    <meta property="twitter:description"
+        content="Transform your PDFs into immersive 3D flipbooks. Experience a real book feel on any device.">
+    <meta property="twitter:image" content="icon.png">
+
+    <link rel="stylesheet" href="style.css">
+    <!-- Premium Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- PDF.js library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+    <!-- DFlip Flipbook library -->
+    <link rel="stylesheet"
+        href="https://qurancomplex.gov.sa/wp-content/plugins/3d-flipbook-dflip-lite/assets/css/dflip.min.css">
+    <link rel="stylesheet"
+        href="https://qurancomplex.gov.sa/wp-content/plugins/3d-flipbook-dflip-lite/assets/css/themify-icons.min.css">
+</head>
+
+<body>
+    <header class="glass">
+        <div class="logo">FLIP<span style="color: var(--text-main)">BOOK</span></div>
+        <div class="controls">
+            <div class="effect-selector">
+                <select id="page-effect" class="glass-input" title="Book Style">
+                    <option value="cover" selected>Standard Book</option>
+                    <option value="all">Photo Album</option>
+                </select>
+            </div>
+            <button id="sound-toggle" class="glass-btn" title="Toggle Sound">
+                <i data-lucide="volume-2"></i>
+            </button>
+            <button id="theme-toggle" title="Toggle Theme">
+                <i data-lucide="sun"></i>
+            </button>
+        </div>
+    </header>
+
+    <main class="container">
+        <!-- Upload Section -->
+        <section id="upload-section" class="animate-in">
+            <div class="glass upload-zone" id="drop-zone">
+                <i data-lucide="book-open"></i>
+                <h2>Transform your PDF</h2>
+                <p>Upload any PDF to experience it as a real 3D book</p>
+                <div style="margin-top: 2rem;">
+                    <label for="file-input" class="btn btn-primary">
+                        <i data-lucide="upload"></i> Choose PDF File
+                    </label>
+                    <input type="file" id="file-input" accept="application/pdf" style="display: none;">
+                </div>
+            </div>
+        </section>
+
+        <!-- Viewer Section -->
+        <section id="viewer-section" style="display: none; width: 100%;">
+            <div id="df_book_viewer" class="animate-in"></div>
+            <div style="display: flex; justify-content: center; margin-top: 2rem;">
+                <button class="btn btn-primary" id="new-upload">
+                    <i data-lucide="refresh-ccw"></i> Upload New PDF
+                </button>
+            </div>
+        </section>
+    </main>
+
+    <!-- Scripts -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://qurancomplex.gov.sa/wp-content/plugins/3d-flipbook-dflip-lite/assets/js/dflip.min.js"></script>
+    <script src="script.js"></script>
+</body>
+
+</html>

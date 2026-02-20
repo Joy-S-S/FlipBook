@@ -1,0 +1,259 @@
+/* CSS Design System - PDF 3D Flipbook */
+
+:root {
+    /* Premium Color Palette (Eye-Friendly) */
+    --primary-main: #1B9C85;
+    --primary-gradient: linear-gradient(135deg, #1B9C85 0%, #4ECCA3 100%);
+    --primary-hover: #178e79;
+    --accent: #FFD93D;
+
+    /* Light Mode Tokens */
+    --bg-base: #F3F7F4;
+    --bg-surface: #FFFFFF;
+    --text-main: #1A1C1B;
+    --text-muted: #5C6360;
+    --glass-bg: rgba(255, 255, 255, 0.75);
+    --glass-border: rgba(255, 255, 255, 0.4);
+    --shadow: 0 12px 40px rgba(0, 0, 0, 0.08);
+}
+
+[data-theme="dark"] {
+    /* Dark Mode Tokens */
+    --bg-base: #06140C;
+    --bg-surface: #0C1D15;
+    --text-main: #E2E8F0;
+    --text-muted: #94A3B8;
+    --glass-bg: rgba(12, 29, 21, 0.8);
+    --glass-border: rgba(255, 255, 255, 0.08);
+    --shadow: 0 12px 40px rgba(0, 0, 0, 0.6);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    background-color: var(--bg-base);
+    color: var(--text-main);
+    line-height: 1.6;
+    overflow-x: hidden;
+}
+
+/* Glassmorphism Classes */
+.glass {
+    background: var(--glass-bg);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid var(--glass-border);
+    box-shadow: var(--shadow);
+}
+
+/* Layout */
+.container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0.0rem 1rem;
+    min-height: calc(100vh - 45px);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    /* Vertically center children */
+}
+
+/* Header & Controls */
+header {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.2rem 2rem;
+    position: sticky;
+    top: 0;
+    z-index: 1001;
+    height: 40px;
+    /* Ultra-compact height */
+}
+
+.logo {
+    font-size: 1.1rem;
+    /* Smaller logo */
+    font-weight: 800;
+    color: var(--primary-main);
+    letter-spacing: -0.5px;
+}
+
+/* Upload Area */
+.upload-zone {
+    width: 100%;
+    max-width: 600px;
+    padding: 4rem 2rem;
+    border: 2px dashed var(--primary-main);
+    border-radius: 24px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.upload-zone:hover {
+    background: rgba(27, 156, 133, 0.05);
+    transform: translateY(-5px);
+}
+
+.upload-zone i {
+    font-size: 3rem;
+    color: var(--primary-main);
+    margin-bottom: 1rem;
+}
+
+/* Buttons */
+.btn {
+    padding: 0.5rem 1.2rem;
+    border-radius: 10px;
+    border: none;
+    font-weight: 600;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: all 0.2s ease;
+}
+
+.btn-primary {
+    background: var(--primary-main);
+    color: white;
+}
+
+.btn-primary:hover {
+    background: var(--primary-hover);
+    transform: scale(1.05);
+}
+
+/* Theme Toggle & Selector */
+.controls {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+}
+
+.glass-input {
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    color: var(--text-main);
+    padding: 0.3rem 0.8rem;
+    border-radius: 8px;
+    font-size: 0.85rem;
+    cursor: pointer;
+    outline: none;
+    backdrop-filter: blur(8px);
+}
+
+#theme-toggle,
+.glass-btn {
+    background: none;
+    border: 1px solid var(--glass-border);
+    padding: 0.25rem;
+    border-radius: 50%;
+    color: var(--text-main);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+#theme-toggle:hover,
+.glass-btn:hover {
+    background: var(--glass-bg);
+    transform: scale(1.1);
+}
+
+#theme-toggle svg,
+.glass-btn svg {
+    width: 18px;
+    height: 18px;
+}
+
+/* Viewer Container */
+#viewer-section {
+    width: 100%;
+    height: calc(100vh - 50px);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+#viewer-wrapper {
+    width: 90vw;
+    height: 80vh;
+    display: none;
+    /* Shown after upload */
+}
+
+#df_book_viewer {
+    width: 100%;
+    height: 70vh;
+    /* Reduced height to ensure internal controls fit */
+}
+
+/* Animations */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.animate-in {
+    animation: fadeIn 0.8s ease forwards;
+}
+/* Hide internal DFlip sound button */
+.df-ui-sound {
+    display: none !important;
+}
+
+/* Sound Toggle Animation */
+#sound-toggle { position: relative; }
+#sound-toggle::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 1.5px;
+    background: #FF4B4B;
+    transform: translate(-50%, -50%) rotate(-45deg);
+    transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    pointer-events: none;
+    border-radius: 1px;
+}
+#sound-toggle.muted::after { width: 20px; }
+#sound-toggle.muted svg { opacity: 0.5; }
+
+
+#sound-toggle { display: none; }
+
+
+/* Mobile touch optimization */
+#df_book_viewer { touch-action: none !important; }
+
+
+/* Mobile Responsiveness */
+@media (max-width: 768px) {
+    header { padding: 0.2rem 1rem; }
+    .controls { gap: 0.5rem; }
+    .logo { font-size: 0.9rem; }
+    .glass-input { padding: 0.2rem 0.4rem; font-size: 0.75rem; }
+    .upload-zone { padding: 2rem 1rem; margin: 0 1rem; }
+    #df_book_viewer { height: 60vh; }
+    .container { padding: 0 0.5rem; }
+}

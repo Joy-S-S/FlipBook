@@ -34,12 +34,6 @@ document.addEventListener('DOMContentLoaded', () => {
     let soundEnabled = true;
     let bookLoaded = false;
     let fabAutoHideTimer = null;
-    let pageHudTimer = null;
-
-    // Page HUD elements
-    const pageIndicator = document.getElementById('page-indicator');
-    const currentPageSpan = document.getElementById('current-page');
-    const totalPagesSpan = document.getElementById('total-pages');
 
     // --- Theme Management ---
     const savedTheme = localStorage.getItem('theme') || 'dark';
@@ -189,21 +183,9 @@ document.addEventListener('DOMContentLoaded', () => {
             if (window.DFLIP) {
                 // To re-init, we need to completely empty the container
                 $("#df_book_viewer").empty();
+
                 // DFlip plugin initialization
                 const flipBook = $("#df_book_viewer").flipBook(source, options);
-
-                // Wait for flipbook to be ready to setup page change listener
-                $("#df_book_viewer").on("df_update", function (e) {
-                    if (flipBook && flipBook.ui) {
-                        const current = flipBook.ui.pageIndex + 1;
-                        const total = flipBook.ui.totalPages;
-
-                        currentPageSpan.textContent = current;
-                        totalPagesSpan.textContent = total;
-
-                        showPageIndicator();
-                    }
-                });
             }
         });
 
@@ -412,19 +394,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         lastTap = now;
     }, { passive: false });
-
-    // --- Page Indicator Logic ---
-
-    function showPageIndicator() {
-        if (!pageIndicator) return;
-
-        pageIndicator.classList.add('visible');
-
-        clearTimeout(pageHudTimer);
-        pageHudTimer = setTimeout(() => {
-            pageIndicator.classList.remove('visible');
-        }, 2000);
-    }
 
     // --- Landscape Header Show on Tap Top Edge ---
     document.addEventListener('click', (e) => {

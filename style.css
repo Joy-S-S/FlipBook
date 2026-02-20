@@ -212,6 +212,18 @@ header {
     display: none !important;
 }
 
+/* Hide DFlip controls and arrows on mobile for immersive touch reading */
+@media (max-width: 932px) {
+    .df-ui-controls {
+        display: none !important;
+    }
+
+    .df-ui-prev,
+    .df-ui-next {
+        display: none !important;
+    }
+}
+
 /* Sound Toggle Animation */
 #sound-toggle {
     display: none;

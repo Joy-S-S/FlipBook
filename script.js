@@ -26,6 +26,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const fabSound = document.getElementById('fab-sound');
     const fabEffect = document.getElementById('fab-effect');
     const fabUpload = document.getElementById('fab-upload');
+    const fabExitFs = document.getElementById('fab-exit-fs');
 
     const effectSelector = document.getElementById('page-effect');
     const soundToggle = document.getElementById('sound-toggle');
@@ -122,6 +123,12 @@ document.addEventListener('DOMContentLoaded', () => {
     function handleFile(file) {
         if (file && file.type === 'application/pdf') {
             currentSource = URL.createObjectURL(file);
+
+            // Enter fullscreen immediately (this is inside a user gesture)
+            if (isMobileDevice()) {
+                enterFullscreen();
+            }
+
             initFlipbook(currentSource);
         } else {
             alert('Please upload a valid PDF file.');
@@ -209,8 +216,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    let needsFullscreen = false;
-
     function updateMobileUI() {
         if (!bookLoaded) {
             mobileFab.classList.remove('visible');
@@ -220,14 +225,10 @@ document.addEventListener('DOMContentLoaded', () => {
         if (isMobileDevice() && isLandscape()) {
             // Show FAB in landscape
             mobileFab.classList.add('visible');
-            // Flag that we want fullscreen — will enter on next user tap
-            needsFullscreen = true;
         } else {
             // Hide FAB in portrait / desktop
             mobileFab.classList.remove('visible');
             closeFabMenu();
-            needsFullscreen = false;
-            exitFullscreen();
         }
     }
 
@@ -334,6 +335,29 @@ document.addEventListener('DOMContentLoaded', () => {
         location.reload();
     });
 
+    // FAB Fullscreen Toggle
+    fabExitFs.addEventListener('click', () => {
+        if (document.fullscreenElement || document.webkitFullscreenElement) {
+            exitFullscreen();
+        } else {
+            enterFullscreen();
+        }
+        updateFsIcon();
+        resetFabAutoHide();
+    });
+
+    function updateFsIcon() {
+        const isFs = document.fullscreenElement || document.webkitFullscreenElement;
+        const icon = isFs ? 'minimize' : 'maximize';
+        fabExitFs.innerHTML = `<i data-lucide="${icon}"></i>`;
+        fabExitFs.title = isFs ? 'Exit Fullscreen' : 'Enter Fullscreen';
+        lucide.createIcons();
+    }
+
+    // Update icon when fullscreen changes externally (e.g. Escape key)
+    document.addEventListener('fullscreenchange', updateFsIcon);
+    document.addEventListener('webkitfullscreenchange', updateFsIcon);
+
     // Header compact upload button
     headerNewUpload.addEventListener('click', () => {
         location.reload();
@@ -367,12 +391,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- Landscape Header Show on Tap Top Edge ---
     document.addEventListener('click', (e) => {
-        // Enter fullscreen on first user tap in landscape (browser requires user gesture)
-        if (needsFullscreen) {
-            enterFullscreen();
-            needsFullscreen = false;
-        }
-
         if (!isMobileDevice() || !isLandscape() || !bookLoaded) return;
 
         // If user taps top 50px of screen, briefly show header

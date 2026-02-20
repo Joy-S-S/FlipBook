@@ -45,7 +45,7 @@
 </head>
 
 <body>
-    <header class="glass">
+    <header class="glass" id="main-header">
         <div class="logo">FLIP<span style="color: var(--text-main)">BOOK</span></div>
         <div class="controls">
             <div class="effect-selector">
@@ -54,14 +54,14 @@
                     <option value="all">Photo Album</option>
                 </select>
             </div>
-            <button id="new-upload-mobile" class="glass-btn" title="Upload New PDF" style="display: none;">
-                <i data-lucide="refresh-ccw"></i>
-            </button>
             <button id="sound-toggle" class="glass-btn" title="Toggle Sound">
                 <i data-lucide="volume-2"></i>
             </button>
             <button id="theme-toggle" title="Toggle Theme">
                 <i data-lucide="sun"></i>
+            </button>
+            <button id="header-new-upload" class="glass-btn" title="Upload New PDF" style="display:none;">
+                <i data-lucide="upload"></i>
             </button>
         </div>
     </header>
@@ -85,9 +85,44 @@
         <!-- Viewer Section -->
         <section id="viewer-section" style="display: none; width: 100%;">
             <div id="df_book_viewer" class="animate-in"></div>
-
+            <div style="display: flex; justify-content: center; margin-top: 2rem;">
+                <button class="btn btn-primary" id="new-upload">
+                    <i data-lucide="refresh-ccw"></i> Upload New PDF
+                </button>
+            </div>
         </section>
     </main>
+
+    <!-- Rotate Prompt Overlay (shown in portrait when book is loaded) -->
+    <div id="rotate-prompt" class="rotate-overlay">
+        <div class="rotate-content">
+            <i data-lucide="smartphone" class="rotate-icon"></i>
+            <p>Rotate your phone for the best reading experience</p>
+            <span class="rotate-hint">Hold in landscape like a real book</span>
+        </div>
+    </div>
+
+    <!-- Floating Action Button for Mobile Landscape Controls -->
+    <div id="mobile-fab" class="fab-container">
+        <button id="fab-toggle" class="fab-btn glass" title="Controls">
+            <i data-lucide="settings"></i>
+        </button>
+        <div id="fab-menu" class="fab-menu glass">
+            <select id="fab-effect" class="glass-input fab-select" title="Book Style">
+                <option value="cover" selected>Standard</option>
+                <option value="all">Album</option>
+            </select>
+            <button id="fab-theme" class="fab-item" title="Toggle Theme">
+                <i data-lucide="sun"></i>
+            </button>
+            <button id="fab-sound" class="fab-item" title="Toggle Sound">
+                <i data-lucide="volume-2"></i>
+            </button>
+            <button id="fab-upload" class="fab-item" title="Upload New PDF">
+                <i data-lucide="upload"></i>
+            </button>
+        </div>
+    </div>
 
     <!-- Scripts -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>

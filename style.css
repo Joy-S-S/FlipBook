@@ -40,6 +40,11 @@
     padding: 0;
     box-sizing: border-box;
     transition: background-color 0.3s ease, color 0.3s ease;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
 }
 
 body {
@@ -196,12 +201,14 @@ header {
 
 #df_book_viewer {
     width: 100%;
-    height: 100%;
+    height: 70vh;
     touch-action: none !important;
 }
 
-/* Hide internal DFlip sound button */
-.df-ui-sound {
+/* Hide internal DFlip sound, share, and fullscreen buttons */
+.df-ui-sound,
+.df-ui-share,
+.df-ui-fullscreen {
     display: none !important;
 }
 
@@ -250,8 +257,206 @@ header {
     animation: fadeIn 0.8s ease forwards;
 }
 
-/* Mobile Responsiveness */
-@media (max-width: 768px) {
+/* =============================================
+   ROTATE PROMPT OVERLAY
+   ============================================= */
+.rotate-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.92);
+    z-index: 9999;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    opacity: 0;
+    transition: opacity 0.4s ease;
+    pointer-events: none;
+}
+
+.rotate-overlay.visible {
+    display: flex;
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.rotate-content {
+    text-align: center;
+    color: #E2E8F0;
+}
+
+.rotate-content .rotate-icon {
+    width: 64px;
+    height: 64px;
+    color: var(--primary-main);
+    margin-bottom: 1.5rem;
+    animation: rotatePhone 2s ease-in-out infinite;
+}
+
+.rotate-content p {
+    font-size: 1.2rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+}
+
+.rotate-hint {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+}
+
+@keyframes rotatePhone {
+
+    0%,
+    100% {
+        transform: rotate(0deg);
+    }
+
+    25% {
+        transform: rotate(-30deg);
+    }
+
+    75% {
+        transform: rotate(-90deg);
+    }
+}
+
+/* =============================================
+   FLOATING ACTION BUTTON (FAB)
+   ============================================= */
+.fab-container {
+    display: none;
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 2000;
+    flex-direction: column-reverse;
+    align-items: flex-end;
+    gap: 10px;
+}
+
+.fab-container.visible {
+    display: flex;
+}
+
+.fab-btn {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    border: 1px solid var(--glass-border);
+    color: var(--text-main);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+}
+
+.fab-btn svg {
+    width: 22px;
+    height: 22px;
+    transition: transform 0.3s ease;
+}
+
+.fab-btn.active svg {
+    transform: rotate(90deg);
+}
+
+.fab-btn:hover {
+    color: white;
+    transform: scale(1.1);
+}
+
+.fab-menu {
+    display: none;
+    flex-direction: column;
+    gap: 8px;
+    padding: 10px;
+    border-radius: 14px;
+    animation: fabSlideIn 0.3s ease forwards;
+}
+
+.fab-menu.open {
+    display: flex;
+}
+
+.fab-item {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    color: var(--text-main);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.fab-item:hover {
+    color: white;
+    transform: scale(1.1);
+}
+
+.fab-item svg {
+    width: 18px;
+    height: 18px;
+}
+
+/* FAB Sound Mute Animation (matches header sound toggle) */
+#fab-sound {
+    position: relative;
+}
+
+#fab-sound::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 1.5px;
+    background: #FF4B4B;
+    transform: translate(-50%, -50%) rotate(-45deg);
+    transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    pointer-events: none;
+    border-radius: 1px;
+}
+
+#fab-sound.muted::after {
+    width: 20px;
+}
+
+#fab-sound.muted svg {
+    opacity: 0.5;
+}
+
+.fab-select {
+    width: 90px;
+    font-size: 0.7rem;
+    padding: 0.2rem 0.3rem;
+    border-radius: 8px;
+}
+
+@keyframes fabSlideIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px) scale(0.9);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+/* =============================================
+   MOBILE PORTRAIT
+   ============================================= */
+@media (max-width: 932px) and (orientation: portrait) {
     header {
         padding: 0.2rem 0.8rem;
     }
@@ -269,7 +474,6 @@ header {
         font-size: 0.75rem;
     }
 
-    /* Adjusted Upload Zone for Mobile */
     .upload-zone {
         padding: 2rem 1rem;
         max-width: 280px;
@@ -288,102 +492,140 @@ header {
         padding: 0 0.5rem;
     }
 
-    /* Force the Entire Flipbook Container to be Horizontal */
     #viewer-section {
-        height: calc(100vh - 45px);
-        /* Adjusted for header */
-        width: 100vw;
-        position: relative;
-        overflow: hidden;
-        background: var(--bg-base);
+        height: calc(100vh - 50px);
     }
 
     #df_book_viewer {
-        position: absolute !important;
-        top: 50% !important;
-        left: 50% !important;
-        width: calc(100vh - 45px) !important;
-        /* Matches exactly the height of viewer-section */
-        height: 100vw !important;
-        /* Visual height matches phone width */
-        transform: translate(-50%, -50%) rotate(90deg) !important;
-        transform-origin: center center !important;
+        height: 60vh;
+    }
+}
+
+/* =============================================
+   MOBILE LANDSCAPE — IMMERSIVE BOOK MODE
+   ============================================= */
+@media (max-width: 932px) and (orientation: landscape) {
+
+    /* Hide header in landscape for max book space */
+    header {
+        position: fixed;
+        top: -50px;
+        transition: top 0.3s ease;
+        width: 100%;
+        z-index: 1001;
+        padding: 0.2rem 0.8rem;
+        height: 40px;
     }
 
-    /* Fix Internal UI (Buttons, Page Numbers) - Keep them upright relative to the phone */
-    .df-ui-btn,
-    .df-ui-wrapper .df-ui-page,
-    .df-ui-zoom-prev,
-    .df-ui-zoom-next {
-        transform: rotate(-90deg) !important;
+    header.header-visible {
+        top: 0;
     }
 
-    /* The arrows natively sit at the left/right of the book.
-       We remove the upright correction so they rotate WITH the book. */
-    .df-ui-next,
-    .df-ui-prev {
-        transform: none !important;
-        margin: 10px !important;
-        /* Allow clicks to pass through the invisible container block so edge swiping works */
-        pointer-events: none !important;
+    .controls {
+        gap: 0.5rem;
     }
 
-    .df-ui-next .df-ui-btn,
-    .df-ui-prev .df-ui-btn {
-        transform: none !important;
-        width: 44px !important;
-        height: 44px !important;
-        background: rgba(0, 0, 0, 0.4) !important;
-        border-radius: 50% !important;
-        display: flex !important;
-        align-items: center !important;
-        justify-content: center !important;
-        /* Re-enable clicks just for the actual circular button */
-        pointer-events: auto !important;
+    .logo {
+        font-size: 0.85rem;
     }
 
-    /* Fix "More" Menu popping out from the toolbar */
-    .df-ui-more .df-more-container {
-        /* Local "left" points towards the book (right on phone screen) */
-        left: 100% !important;
-        right: auto !important;
-        /* Local "bottom" points to the bottom of the button */
-        bottom: 0 !important;
-        background: var(--bg-surface) !important;
-        border-radius: 12px !important;
-        padding: 5px 0 !important;
-        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5) !important;
-        min-width: 200px !important;
+    .glass-input {
+        padding: 0.2rem 0.4rem;
+        font-size: 0.75rem;
     }
 
-    /* Fix buttons inside the More Menu so they aren't rotated again */
-    .df-more-container .df-ui-btn {
-        transform: none !important;
-        /* Cancel the -90deg rotation */
-        width: 100% !important;
-        height: 45px !important;
-        display: flex !important;
-        align-items: center !important;
-        justify-content: flex-start !important;
-        padding: 0 15px !important;
-        margin: 0 !important;
-        border-radius: 0 !important;
-        background: transparent !important;
-        color: var(--text-main) !important;
-        text-decoration: none !important;
+    /* Full viewport book */
+    body {
+        overflow: hidden;
     }
 
-    /* Ensure text is clearly visible next to the icons */
-    .df-more-container .df-ui-btn span {
-        display: inline-block !important;
-        margin-left: 15px !important;
-        font-family: inherit !important;
-        font-size: 14px !important;
-        white-space: nowrap !important;
+    .container {
+        padding: 0;
+        margin: 0;
+        max-width: 100%;
+        min-height: 100vh;
     }
 
-    #new-upload-mobile {
-        color: var(--primary-main);
-        border-color: var(--primary-main);
+    #viewer-section {
+        height: 100vh !important;
+        width: 100vw !important;
+        margin: 0;
+        padding: 0;
     }
+
+    #df_book_viewer {
+        width: 100vw !important;
+        height: 100vh !important;
+    }
+
+    /* Hide the desktop "Upload New PDF" button in landscape */
+    #viewer-section>div:last-child {
+        display: none !important;
+    }
+
+    /* Make DFlip controls not overlap FAB */
+    .df-ui-controls {
+        bottom: 8px !important;
+        right: 80px !important;
+    }
+}
+
+/* =============================================
+   GENERAL SMALL SCREEN FALLBACK
+   ============================================= */
+@media (max-width: 768px) {
+    .upload-zone {
+        padding: 2rem 1rem;
+        max-width: 280px;
+        margin: 0 auto;
+    }
+
+    .upload-zone h2 {
+        font-size: 1.2rem;
+    }
+}
+
+/* Touch action for mobile viewer */
+#df_book_viewer {
+    -ms-touch-action: none;
+    touch-action: none;
+}
+
+/* Prevent pull-to-refresh on mobile */
+body.viewer-active {
+    overscroll-behavior: none;
+    touch-action: manipulation;
+}
+
+/* True Fullscreen Mode */
+:fullscreen {
+    background-color: var(--bg-base);
+}
+
+:-webkit-full-screen {
+    background-color: var(--bg-base);
+}
+
+:fullscreen #df_book_viewer,
+:-webkit-full-screen #df_book_viewer {
+    width: 100vw !important;
+    height: 100vh !important;
+}
+
+:fullscreen header,
+:-webkit-full-screen header {
+    display: none !important;
+}
+
+:fullscreen .container,
+:-webkit-full-screen .container {
+    padding: 0;
+    margin: 0;
+    max-width: 100%;
+    min-height: 100vh;
+}
+
+:fullscreen #viewer-section>div:last-child,
+:-webkit-full-screen #viewer-section>div:last-child {
+    display: none !important;
 }
